@@ -1,0 +1,55 @@
+Main:	nop
+	addi r4, r0, 16 	#carrega o tamanho da matriz para o r4
+	addi a0, r4, 0 		#faz r4 virar um argumento
+	addi a1, r0, 0 		#carrega o endereço inicial da matriz(pode ser modificado)
+	jal init			#init(M, 16)
+	jal diag			#diag(M, 16)
+	addi r7, v0, 0		#r = diag(M, 16)
+	beq r0, r0, display	#go to display(r)
+
+init:
+	addi r8, r0, 0		#i = 0
+	addi r9, r0, 0		#j = 0
+	addi r11, ra, 0		#r11 = ra(salva o endereço de ra em r11 para fazer outro jal)
+
+fori:
+	beq r8, a0, saii	#if i = 16 then stop
+	mul r10, a0, r8 	#r10 = i * 16
+	jal forj
+	addi r8, r8, 1 		#i = i + 1
+	add r9, r0, r0		#j = 0
+	beq r0, r0, fori		#recomeça o laço
+saii: jr r11			#retorna para main
+
+forj:
+	beq r9, a0, saij 	#if j = 16 then stop
+	add r12, r10, r9 	#r12 = (i*16) + j
+	add r12 , r12, a1	#r12 recebe r12+ enderço inicial da matriz
+	add r13, r8, r9		#r13 = i + j
+	st r13, (r12)		#m[i][j] = i+j
+	addi r9, r9, 1		#j = j+1
+	beq r0, r0, forj		#recomeça o laço
+saij: jr ra			#retorna para fori
+
+diag:
+	addi r13, ra, 0 	#r13 = ra(guarda o endereço de ra para fazer outro jal)
+	addi r9, r0, 0		#s = 0
+	addi r8, r0, 0		#i = 0
+	jal foridiag
+	addi v0, r9, 0 		#diag = s
+	jr r13			#retorna para main
+
+foridiag:
+	beq r8, a0, saiid 	#if i = 16 then stop
+	mul r10, r8, a0 	#r10 = i * 16
+	add r10, r10, r8	#r10 = (i*16) + i
+	addi r10, r10, 0	#r10 recebe r10 + endereço inicial da matriz
+	ld r12, (r10)		# r12 = M[i][i]
+	add r9, r9, r12		#s = s+ M[i][i]
+	addi r8, r8, 1		#i = i+1
+	beq r0, r0, foridiag	#recomeça o laço
+saiid: jr ra			# retorna para main
+
+display:
+	show r7 		#display(r)
+	halt			#end
