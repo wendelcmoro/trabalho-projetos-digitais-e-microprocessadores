@@ -8,4 +8,4 @@ Trabalhos Final da disciplina de Projetos Digitais e Microprocessadores(CI1210) 
 - Para compilar o código é necessário do [GHDL](https://github.com/ghdl/ghdl)
 - Para executar a simulação, o script **run.sh** foi concedido pelo professor da disciplina
 
-Período original em que o projeto foi feito: 02/2018
+Período original em que o projeto foi feito: 2° Sem. 2018
